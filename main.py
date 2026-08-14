@@ -22,18 +22,18 @@ def level(level,menu_win):
 def init_menu():
     win = tk.Tk()
     win.geometry("300x300")
-    win.title("困难度选择")
+    win.title("困難度選擇")
 
-    title1 = tk.Label(win, text="欢迎游玩踩地雷", font=("", 16))
+    title1 = tk.Label(win, text="歡迎遊玩踩地雷", font=("", 16))
     title1.pack(pady=(20, 2))  # pady=(上邊距, 下邊距)
-    title2 = tk.Label(win, text="请选择难度", font=("", 16))
+    title2 = tk.Label(win, text="請選擇難度", font=("", 16))
     title2.pack(pady=(2, 15))  # 這兩個 Label 之間的間距，就是你要的行距！
 
     simple = tk.Button(win,
                        text='simple',
                        command=lambda:level('simple',win),
-                       relief='raised', #边框种类设定，button的预设
-                       bd=3,            #边框宽
+                       relief='raised', #邊框種類設定，button的預設
+                       bd=3,            #邊框寬
                        font=('',12))
     simple.pack(pady=10)
 
