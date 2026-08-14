@@ -1,19 +1,19 @@
 import tkinter as tk
 import time
-from game_logic import generate_board  # 👈 假設你當初在大腦寫的函式叫這個名字
+from game_logic import generate_board  #假設你當初在大腦寫的函式叫這個名字
 
 
 def update_time(game_win,timer,current_time):
     current_time+=1
-    curr_min, curr_sec = divmod(int(current_time), 60) #运算后可直接分为商与余数
-    timer.config(text=f'用时{curr_min:02d}:{curr_sec:02d}')
+    curr_min, curr_sec = divmod(int(current_time), 60) #運算後可直接分為商與餘數
+    timer.config(text=f'用時{curr_min:02d}:{curr_sec:02d}')
     game_win.after(1000,lambda:update_time(game_win, timer, current_time))
 
 # =============================================================
-# 🌟 寫在最外面：元件與記帳本通通由「參數」外送進來！
+# 寫在最外面：元件與記帳本通通由「參數」外送進來！
 # =============================================================
 def update_flag(flag_label, flag_tracker, word=None):
-    # 1. 根據玩家的操作，去修改傳進來的 list 記帳本裡面的數字
+    # 1. 根據玩家的操作，去修改傳進來的list裡面的數字
     if word == 'increase':
         flag_tracker[0] -= 1  # 插了旗子，需要的旗子數減少
     elif word == 'decrease':
@@ -32,12 +32,12 @@ def gameover(game_win):
     
     win_over = tk.Toplevel(game_win)
     win_over.geometry("200x100")
-    win_over_label = tk.Label(win_over,text='失败！',font=("",14))
+    win_over_label = tk.Label(win_over,text='失敗！',font=("",14))
     win_over_label.pack(pady=20) 
     over_button = tk.Button(win_over,text="返回",command=goBackToMenu,font=("",12))
     over_button.pack()
-    win_over.transient(game_win) #让附属视窗浮在主视窗上
-    win_over.grab_set()          #让附属视窗消失前无法点击主视窗
+    win_over.transient(game_win) #讓附屬視窗浮在主視窗上
+    win_over.grab_set()          #讓附屬視窗消失前無法點擊主視窗
     
 def victory(game_win):
     from main import init_menu
@@ -59,13 +59,13 @@ def victory(game_win):
 def start_game_ui(rows, cols, num_mines):
     # 建立全域防禦變數：記錄上一次人類「左鍵」與「右鍵」點擊的時間
     last_click_time = [0.0]
-    #记录需要多少旗子
+    #記錄需要多少旗子
     remaining_flags = [num_mines]
-    #记录是不是第一次按
+    #記錄是不是第一次按
     first_click = [True]
     board_container = [None]  #建立一個外送箱，用來永久裝地圖
     
-    #建立一个叫button_grid的列表去填入空表示被盖起来的地雷图
+    #建立一個叫button_grid的列表去填入空表示被蓋起來的地雷圖
     buttons_grid=[]
     for r in range(rows):
         row_list=[]
@@ -76,14 +76,14 @@ def start_game_ui(rows, cols, num_mines):
         
     def left_click(event, r, c):
         # ---------------------------------------------------------
-        # 🌟 寫在裡面：負責算數學的內層函式，直接共享外部變數
+        # 寫在裡面：負責算數學的內層函式，直接共享外部變數
         # ---------------------------------------------------------
         def check_win():
             unopened_count = 0
             for r_idx in range(rows):
                 for c_idx in range(cols):
-                    if buttons_grid[r_idx][c_idx]["state"] == "normal":#normal就是没有被disable的
-                        unopened_count += 1                             #还有一种叫active是悬停或点击中
+                    if buttons_grid[r_idx][c_idx]["state"] == "normal":#normal就是沒有被disable的
+                        unopened_count += 1                             #還有一種叫active是懸停或點擊中
             return unopened_count == num_mines
         
         # 1. 邊界防護罩
@@ -92,7 +92,7 @@ def start_game_ui(rows, cols, num_mines):
             
         current_btn = buttons_grid[r][c]
         
-        # 2. 左鍵 Debounce 檢查（只對人類手動點擊有效）
+        # 2. 左鍵Debounce檢查（只對人類手動點擊有效）
         if event is not None:
             current_time = time.time()
             if current_time - last_click_time[0] < 0.15:
@@ -110,12 +110,12 @@ def start_game_ui(rows, cols, num_mines):
             board_container[0] = generate_board(rows, cols, num_mines, r, c)
             first_click[0] = False
         # =============================================================
-        # 🌟 大路 A：這格「已經翻開了」（Chording 雙擊解鎖鄰居）
+        # 大路 A：這格「已經翻開了」（Chording 雙擊解鎖鄰居）
         # =============================================================
         board = board_container[0]
         if current_btn["state"] == "disabled":
             # 只有當玩家「手動點擊」一個已經翻開的「數字格」時，才觸發解鎖
-            # 虽然button被disable但它只能封锁掉command，用bind还是可以作动
+            # 雖然button被disable但它只能封鎖掉command，用bind還是可以作動
             if board[r][c] > 0 and event is not None:
                 val = board[r][c]
                 
@@ -131,7 +131,7 @@ def start_game_ui(rows, cols, num_mines):
                                 
                 # 如果周圍旗子數剛好等於這格的數字，連鎖戳周圍鄰居
                 if flag_num == val:
-                    print(f"⚡ 觸發雙擊解鎖！點擊了數字 {val} 的周圍")
+                    print(f"觸發雙擊解鎖！點擊了數字 {val} 的周圍")
                     for dr in [-1, 0, 1]:
                         for dc in [-1, 0, 1]:
                             if dr == 0 and dc == 0: continue
@@ -139,14 +139,14 @@ def start_game_ui(rows, cols, num_mines):
             return # 已經翻開的格子處理完解鎖就必須 return，不能往下走！
 
         # =============================================================
-        # 🌟 大路 B：這格「尚未翻開」（第一次翻開格子的原本邏輯）
+        # 大路 B：這格「尚未翻開」（第一次翻開格子的原本邏輯）
         # =============================================================
-        print(f"左键点击了{r},{c}")
+        print(f"左鍵點擊了{r},{c}")
         if board[r][c] == -1:
             gameover(game_win)
             
         elif board[r][c] == 0:
-            print('扩充到有数字')
+            print('擴充到有數字')
             current_btn.config(text="", relief="flat", state="disabled", bg="#e6e6e6")
             for dr in [-1, 0, 1]:
                 for dc in [-1, 0, 1]:
@@ -161,13 +161,13 @@ def start_game_ui(rows, cols, num_mines):
             current_btn.config(
                 text=str(val), 
                 fg=btn_color,
-                #disable会把颜色都变成灰的所以要设定，并还要先写font
+                #disable會把顏色都變成灰的所以要設定，並還要先寫font
                 disabledforeground=btn_color, 
                 relief="flat", 
                 state="disabled", 
                 bg="#e6e6e6"
             )
-        #呼叫判断成功的function
+        #呼叫判斷成功的function
         if check_win():
             victory(game_win)  # 條件成立，呼叫最外面的轉場積木！
             return
@@ -204,7 +204,7 @@ def start_game_ui(rows, cols, num_mines):
     game_frame = tk.Frame(game_win)
     game_frame.pack(side='bottom')
     
-    use_time = tk.Label(info_frame,text='用时:0s')#text这里会被上面的覆盖掉所以写不写没关系
+    use_time = tk.Label(info_frame,text='用時:0s')#text這裡會被上面的覆蓋掉所以寫不寫沒關係
     use_time.pack(side='left')
     update_time(game_win, use_time, 0)
     flag = tk.Label(info_frame,text="🚩:")
@@ -222,4 +222,3 @@ def start_game_ui(rows, cols, num_mines):
             #     left_click(event, r, c)
     
     game_win.mainloop()
-            
