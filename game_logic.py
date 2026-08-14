@@ -10,7 +10,7 @@ def generate_board(rows, cols, num_mines, click_row=1, click_col=1):
     #         rowlist.append(0)
     #     board.append(rowlist)
     
-    # 2. 隨機埋雷（地雷为-1，空格为0）
+    # 2. 隨機埋雷（地雷為-1，空格為0）
     mines_planted = 0
     while mines_planted < num_mines:
         r = random.randint(0, rows - 1)
@@ -23,10 +23,10 @@ def generate_board(rows, cols, num_mines, click_row=1, click_col=1):
             board[r][c] = -1
             mines_planted += 1
             
-            # 3. 🌟 關鍵：通知這顆雷周圍的 8 個鄰居，叫他們的數字全部 +1
-            # 鄰居的相對座標範圍是 -1 到 1
+            # 3.通知這顆雷周圍的8個鄰居，叫他們的數字全部+1
+            # 鄰居的相對座標範圍是-1到1
             #d=difference or delta 表差距、位移量
-            #n=next or neighbor 表下一个、邻居
+            #n=next or neighbor 表下一個、鄰居
             for dr in [-1, 0, 1]:
                 for dc in [-1, 0, 1]:
                     nr, nc = r + dr, c + dc
@@ -37,21 +37,21 @@ def generate_board(rows, cols, num_mines, click_row=1, click_col=1):
     return board
 
 # ==========================================
-# 測試我們的大腦運作是否正常
+# 測試邏輯運作是否正常
 # ==========================================
-#__name__ == __main__是用来被import的话不执行，等同于testbench
+#__name__ == __main__是用來被import的話不執行，等同於testbench
 if __name__ == "__main__":
-    # 產生一個 9x9，裡面有 10 顆雷的測試地圖
+    # 產生一個9x9，裡面有10顆雷的測試地圖
     test_board = generate_board(9, 9, 10)
-    # 外層迴圈：先把 test_board 拆解成一列一列的 row
+    # 外層迴圈：先把test_board拆解成一列一列的row
     for row in test_board:
         # 每處理新的一列，就要準備一個乾淨的空清單放這一列的文字
         new_row_string = []
-        # 內層迴圈：這時候才能對 row 進行一格一格的 cell 拆解！
+        # 內層迴圈：這時候才能對row進行一格一格的 cell 拆解！
         for cell in row:
             if cell == -1:
                 new_row_string.append('*')
             else:
                 new_row_string.append(str(cell))
-        #   當這一列的 9 個格子都加工完成了，用空格黏起來並「換行印出」
+        #當這一列的 9 個格子都加工完成了，用空格黏起來並「換行印出」
         print(" ".join(new_row_string))
